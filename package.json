@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/TheArtho/TD1_Methode_Logiciel/issues"
   },
-  "homepage": "https://github.com/TheArtho/TD1_Methode_Logiciel#readme"
+  "homepage": "https://github.com/TheArtho/TD1_Methode_Logiciel#readme",
+  "dependencies": {
+    "chalk": "^5.0.1"
+  }
 }
