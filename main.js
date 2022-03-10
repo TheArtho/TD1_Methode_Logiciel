@@ -9,7 +9,6 @@ const rl = readline.createInterface(
 );
 
 let data;
-let dataObj;
 
 let createData = () => {
     let jsonData = '[]';
