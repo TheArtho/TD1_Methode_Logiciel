@@ -40,12 +40,15 @@ rl.on('line', (num) => {
     console.log('You choose:'+num);
         switch(num) {
             case "1":
-              action1();
-              break;
+                interface.addTask(data, taskHandler, rl);
+                break;
             case  "2":
-              action2();
-              break;
+                interface.removeTask(data, taskHandler, rl);
+                break;
             case "3":
+                interface.editTask(data, taskHandler, rl);
+                break;
+            case "4":
                 rl.close();
                 break;
             default:
