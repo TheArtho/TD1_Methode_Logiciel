@@ -9,27 +9,28 @@ const rl = readline.createInterface(
 );
 
 let data;
+let dataObj;
 
 let createData = () => {
-    let jsonData = '[]';
+    let jsonData = '{"list":[]}';
 
     fs.writeFile("data.json", jsonData, 'utf8', function (err) {
         if (err) {
             console.log("An error occured while writing JSON Object to File.");
             return console.log(err);
         }
-     
+
         console.log("JSON file has been created.");
     });
 }
 
 let saveData = () => {
-    fs.writeFile("data.json", data, 'utf8', function (err) {
+    fs.writeFile("data.json", JSON.stringify(data), 'utf8', function (err) {
         if (err) {
             console.log("An error occured while writing JSON Object to File.");
             return console.log(err);
         }
-     
+
         console.log("JSON file has been created.");
     });
 }
@@ -53,15 +54,10 @@ const dataPath = './data.json'
 /* Start */
 
 // Checks for data file
-try {
-  if (fs.existsSync(path)) {
-    //file exists
-  }
-} catch(err) {
-    createData();
+if (!fs.existsSync(dataPath)) {
+    fs.writeFileSync(dataPath, '{"list":[]}')
 }
-data = require('data.json');
-
+data = require(dataPath);
 
 menu();
 
@@ -86,7 +82,7 @@ rl.on('line', (num) => {
 //event handle at close
 
 rl.on('close', function () {
-    
+
     console.log("BYE BYE !");
     process.exit(0);
-});
+}); 
