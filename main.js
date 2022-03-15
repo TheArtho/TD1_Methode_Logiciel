@@ -1,5 +1,6 @@
 const readline = require('readline');
-const fs = require('fs')
+const fs = require('fs');
+const taskHandler = require('./taskHandler.js');
 
 const rl = readline.createInterface(
     {
@@ -10,19 +11,6 @@ const rl = readline.createInterface(
 
 let data;
 let dataObj;
-
-let createData = () => {
-    let jsonData = '{"list":[]}';
-
-    fs.writeFile("data.json", jsonData, 'utf8', function (err) {
-        if (err) {
-            console.log("An error occured while writing JSON Object to File.");
-            return console.log(err);
-        }
-
-        console.log("JSON file has been created.");
-    });
-}
 
 let saveData = () => {
     fs.writeFile("data.json", JSON.stringify(data), 'utf8', function (err) {
@@ -38,9 +26,11 @@ let saveData = () => {
 let menu = () => {
     console.log('\tTODO LIST\n');
 
-    if (data.length > 0) {
-        for (let i = 0; i < data.length; i++) {
-            console.log('- '+data[i]);
+    if (data.list.length > 0) {
+        for (let i = 0; i < data.list.length; i++) {
+            let item = data.list[i];
+            let task = new taskHandler.task(item.title, item.state);
+            task.show();
         }
         console.log('- Add a new Task');
     }
@@ -49,7 +39,7 @@ let menu = () => {
     }    
 }
 
-const dataPath = './data.json'
+const dataPath = './data.json';
 
 /* Start */
 
