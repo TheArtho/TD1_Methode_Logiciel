@@ -1,7 +1,8 @@
 const readline = require('readline');
 const fs = require('fs');
 const taskHandler = require('./taskHandler.js');
-
+const interface = require('./menu.js')
+const dataPath = './data.json';
 const rl = readline.createInterface(
     {
         input: process.stdin,
@@ -23,23 +24,7 @@ let saveData = () => {
     });
 }
 
-let menu = () => {
-    console.log('\tTODO LIST\n');
 
-    if (data.list.length > 0) {
-        for (let i = 0; i < data.list.length; i++) {
-            let item = data.list[i];
-            let task = new taskHandler.task(item.title, item.state);
-            task.show();
-        }
-        console.log('- Add a new Task');
-    }
-    else {
-        console.log('- Add your first TODO Task');
-    }    
-}
-
-const dataPath = './data.json';
 
 /* Start */
 
@@ -49,7 +34,7 @@ if (!fs.existsSync(dataPath)) {
 }
 data = require(dataPath);
 
-menu();
+interface.menu(data, taskHandler);
 
 rl.on('line', (num) => {
     console.log('You choose:'+num);
@@ -66,7 +51,7 @@ rl.on('line', (num) => {
             default:
               console.log('Dont know what you want...')
           }
-        menu();
+        interface.menu(data, taskHandler);
     });
 
 //event handle at close
