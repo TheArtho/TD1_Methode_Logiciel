@@ -3,7 +3,7 @@ class task {
         this.title = title;
         this.state = state;
 
-        //console.log('creating new task: '+title+" - "+state)
+        //console.log('creating new task: '+this.toString())
     }
 
     setTitle (newTitle) {
@@ -15,7 +15,11 @@ class task {
     }
 
     show () {
-        console.log('- '+this.title+" => "+(this.state ? "terminée" : "non terminée"));
+        console.log('- '+this.toString());
+    }
+
+    toString () {
+        return this.title+" => "+(this.state ? "terminée" : "non terminée");
     }
 }
 
