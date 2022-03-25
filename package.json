@@ -5,6 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "node main.js",
+    "server": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,6 +19,8 @@
   },
   "homepage": "https://github.com/TheArtho/TD1_Methode_Logiciel#readme",
   "dependencies": {
-    "chalk": "^5.0.1"
+    "chalk": "^5.0.1",
+    "express": "^4.17.3",
+    "prompt": "^1.2.2"
   }
 }
