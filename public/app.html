@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TODO List</title>
+    <link rel="stylesheet" href="main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="main">
+        <div class="left-container">
+            <div class="side-header">
+                <p class="username">User</p>
+                <p class="underline-button">Disconnect</p>
+            </div>
+            <div class="side-menu">
+                <h1>Task Groups</h1>
+                <div class="group-list">
+                    <div class="group-item"></div>
+                </div>
+                <div class="button-col-list">
+                    <button id="new-group" class="button primary">New Task Group</button>
+                    <button id="edit-group" class="button secondary">Edit Groups</button>
+                </div>
+            </div>
+        </div>
+        <div class="right-container">
+            <div class="container">
+                <h1 class="title">TODO List</h1>
+                <div class="task-list">
+                    <div class="task-item">
+                        <p class="task-name">Cook food</p>
+                        <p class="task-state done">DONE</p>
+                    </div>
+                    <div class="task-item">
+                        <p class="task-name">Tidy the room</p>
+                        <p class="task-state todo">TODO</p>
+                    </div>
+                    <div class="task-item">
+                        <input type="text" class="task-name">Tidy the room</input>
+                        <input type="text" class="task-state todo">TODO</input>
+                    </div>
+                </div>
+                <div class="button-col-list">
+                    <button id="new-task" class="button primary">New Task</button>
+                    <button id="edit-task" class="button secondary">Edit Tasks</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="assets/js/jquery-3.6.0.min.js"></script>
+    <script type="module" src="assets/js/app.js"></script>
+</body>
+</html>

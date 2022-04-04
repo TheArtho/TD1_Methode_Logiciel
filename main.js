@@ -1,6 +1,6 @@
 const readline = require('readline');
 const fs = require('fs');
-const taskHandler = require('./taskHandler.js');
+const taskHandler = require('./public/assets/js/taskHandler.js');
 const interface = require('./menu.js')
 const dataPath = './data.json';
 const rl = readline.createInterface(
@@ -23,7 +23,6 @@ let saveData = () => {
         console.log("JSON file has been created.");
     });
 }
-
 
 
 /* Start */

@@ -1,4 +1,6 @@
 
+const prompt = require('prompt');
+
 let menu = (data, taskHandler) => {
     console.log('\tTODO LIST\n');
 
@@ -17,10 +19,13 @@ let menu = (data, taskHandler) => {
 
 let addTask = (data, taskHandler, rl) => {
     console.log('\n\nChoose a task name:');
-    rl.on('line', (name) => {
-        let newTask = new taskHandler.task(name, false);
+    prompt.get(['name'], function (err, result) {
+        if (err) {
+          return onErr(err);
+        }
+        let newTask = new taskHandler.task(result.name, false);
         data.list.push(newTask);
-        });
+      });
 }
 
 let removeTask = (data, taskHandler, rl) => {

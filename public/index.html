@@ -17,24 +17,22 @@
     <div class="main">
         <div class="container">
             <h1 class="title">TODO List</h1>
-            <div class="task-list">
-                <div class="task-item">
-                    <p class="task-name">Cook food</p>
-                    <p class="task-state done">DONE</p>
-                </div>
-                <div class="task-item">
-                    <p class="task-name">Tidy the room</p>
-                    <p class="task-state todo">TODO</p>
-                </div>
+            
+            <div class="auth-form">
+                <label for="user_username">Username: </label>
+                <input class="auth-input" id="user_username" type="text" name="username" required minlength="4" maxlength="8" size="10">
+                <label for="user_password">Password: </label>
+                <input class="auth-input" id="user_password" type="password" name="password" required minlength="4" maxlength="8" size="10">
             </div>
+
             <div class="button-col-list">
-                <button class="button primary">New Task</button>
-                <button class="button secondary">Edit Tasks</button>
+                <button id="connect" class="button primary">Log In</button>
+                <p class="text-button">Sign Up</p>
             </div>
         </div>
     </div>
-    <!--
-    <script type="text/javascript" src="main.js"></script>
-    -->
+
+    <script type="text/javascript" src="assets/js/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="assets/js/auth.js"></script>
 </body>
 </html>
