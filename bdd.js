@@ -25,9 +25,54 @@ function getUser(username,password){
   });
 }
 
-getUser("loic","kebab");
+function createUser(username, password){
+  let query = { name : username, password : password};
+  
+  client.connect((err)=>{
+    if (err) {
+      console.log("Erreur lors de la connection à la base de données");
+    }
+    else{
+      const collection = client.db("TODOList").collection("users");
+      collection.find(query).toArray((err, result,) =>{
+        if(result.length == 0){
+          //On creer le nouvelle user
+          console.log(query.name, query.password);
+          insert(username,password);
+        }
+        else
+          console.log("Username deja utiliser, veuillez réessayer");
+          
+          client.close();
+      });
+    }
+  });
+}
+function getUserToken(username, password, callback){  
+  let query = { name : username, password : password};
+  let res = undefined;
 
-
+  client.connect((err)=>{
+    if (err) {
+      console.log("Erreur lors de la connection à la base de données");
+    }
+    else{
+      const collection = client.db("TODOList").collection("users");
+      collection.find(query).toArray((err, result) =>{
+        if(result.length == 0) {
+          callback(0);
+        }  
+        else {
+          //console.log(result);
+          res = result[0]._id;
+          console.log(res);
+          callback(res);
+        }
+          client.close();
+      });
+    }
+  });
+}
 
 /*
 client.connect((err) => {
@@ -35,7 +80,6 @@ client.connect((err) => {
     console.log("Erreur lors de la connection à la base de données");
   } else {
     const collection = client.db("TODOList").collection("users");
-
    collection.findOne({
       name : "loic"
     },(err) => {
