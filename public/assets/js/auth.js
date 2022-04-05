@@ -1,3 +1,14 @@
+function getCookie(name) {
+    let nameEQ = name + "=";
+    let ca = document.cookie.split(';');
+    for(let i = 0; i < ca.length; ++i) {
+        let c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1);
+        if (c.indexOf(nameEQ) != -1) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+}
+
 $(() => {
     console.log("Ready!");
 
@@ -15,8 +26,9 @@ $(() => {
             data: login_data,
             dataType: 'json'
         }).done(function (data) {
-
+            
             if (data.success) {
+                document.cookie = 'username='+login_data.username+';token='+data.token+'path=/;';
                 window.location.href = "app.html";
             }
             else {
