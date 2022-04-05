@@ -27,24 +27,32 @@ function getUser(username,password){
 
 function createUser(username, password){
   let query = { name : username, password : password};
-  
+  exist = 0;
   client.connect((err)=>{
     if (err) {
       console.log("Erreur lors de la connection à la base de données");
     }
     else{
       const collection = client.db("TODOList").collection("users");
-      collection.find(query).toArray((err, result,) =>{
-        if(result.length == 0){
-          //On creer le nouvelle user
-          console.log(query.name, query.password);
-          insert(username,password);
-        }
-        else
-          console.log("Username deja utiliser, veuillez réessayer");
-          
+      collection.find(query).toArray((err, result) =>{
+        if(result.length == 0) {
+          exist = 1;
+        }  
+        else {
+          //console.log(result);
+          console.log("L'utilisateur existe déjà, veuiller donner un autre nom");
           client.close();
+        }
       });
+          collection.insertOne({name : username, password : password},(err) => {
+          if (err) {
+            console.log("Erreur lors de l'ajout à la base de donnée");
+          } else {
+            console.log("L'utilisateur a bien été crée");
+            client.close();
+          }
+        });
+      
     }
   });
 }
@@ -122,6 +130,8 @@ function getTasksGroupsByUserID(id, callback){
   });
 
 }
+
+createUser("nfjn", "kebdedab");
 /*
 client.connect((err) => {
   if (err) {
