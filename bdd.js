@@ -74,7 +74,7 @@ function getUserToken(username, password, callback){
   });
 }
 
-function getTaskToken(taskName, callback){
+function getTask(taskName, callback){
   let query = {name : taskName};
   let res = undefined;
 
@@ -101,7 +101,7 @@ function getTaskToken(taskName, callback){
 
 }
 
-function getTaskGroupToken(taskGroupName, callback){
+function getTaskGroup(taskGroupName, callback){
   let query = {name : taskGroupName};
   let res = undefined;
 
