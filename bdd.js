@@ -74,12 +74,66 @@ function getUserToken(username, password, callback){
   });
 }
 
+function getTaskToken(taskName, callback){
+  let query = {name : taskName};
+  let res = undefined;
+
+  client.connect((err)=>{
+    if (err) {
+      console.log("Erreur lors de la connection à la base de données");
+    }
+    else{
+      const collection = client.db("TODOList").collection("tasks");
+      collection.find(query).toArray((err, result) =>{
+        if(result.length == 0) {
+          callback(0);
+        }  
+        else {
+          //console.log(result);
+          res = result[0]._id;
+          console.log(res);
+          callback(res);
+        }
+          client.close();
+      });
+    }
+  });
+
+}
+
+function getTaskGroupToken(taskGroupName, callback){
+  let query = {name : taskGroupName};
+  let res = undefined;
+
+  client.connect((err)=>{
+    if (err) {
+      console.log("Erreur lors de la connection à la base de données");
+    }
+    else{
+      const collection = client.db("TODOList").collection("tasks_group");
+      collection.find(query).toArray((err, result) =>{
+        if(result.length == 0) {
+          callback(0);
+        }  
+        else {
+          //console.log(result);
+          res = result[0]._id;
+          console.log(res);
+          callback(res);
+        }
+          client.close();
+      });
+    }
+  });
+
+}
 /*
 client.connect((err) => {
   if (err) {
     console.log("Erreur lors de la connection à la base de données");
   } else {
     const collection = client.db("TODOList").collection("users");
+
    collection.findOne({
       name : "loic"
     },(err) => {
