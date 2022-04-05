@@ -25,7 +25,7 @@ function getUser(username,password){
   });
 }
 
-function createUser(username, password){
+function createUser(username, password, callback){
   let query = { name : username, password : password};
   exist = 0;
   client.connect((err)=>{
@@ -41,6 +41,7 @@ function createUser(username, password){
         else {
           //console.log(result);
           console.log("L'utilisateur existe déjà, veuiller donner un autre nom");
+          callback(0);
           client.close();
         }
       });
@@ -49,6 +50,7 @@ function createUser(username, password){
             console.log("Erreur lors de l'ajout à la base de donnée");
           } else {
             console.log("L'utilisateur a bien été crée");
+            callback(1);
             client.close();
           }
         });
@@ -83,8 +85,8 @@ function getUserToken(username, password, callback){
   });
 }
 
-function getTasksByUserID(id, callback){
-  let query = {_id : id};
+function getTasksByGroupID(id, callback){
+  let query = {groupTaskID : id};
 
   client.connect((err)=>{
     if (err) {
@@ -130,8 +132,106 @@ function getTasksGroupsByUserID(id, callback){
   });
 
 }
+function createGroupTask(name, userID, callback){
+  client.connect((err)=>{
+    if (err) {
+      console.log("Erreur lors de la connection à la base de données");
+    }
+    else{
+      const collection = client.db("TODOList").collection("tasks_groups");
+      
+          collection.insertOne({name : name, userID : userID},(err) => {
+          if (err) {
+            console.log("Erreur lors de l'ajout à la base de donnée");
+          } else {
+            console.log("Le groupe a bien été ajoutée");
+            callback(0);
+            client.close();
+          }
+        }); 
+    }
+  });
+}
+function createTask(name, groupTaskID, callback){
+  client.connect((err)=>{
+    if (err) {
+      console.log("Erreur lors de la connection à la base de données");
+    }
+    else{
+      const collection = client.db("TODOList").collection("tasks");
+          collection.insertOne({name : name, done : false, groupTaskID : groupTaskID},(err) => {
+          if (err) {
+            console.log("Erreur lors de l'ajout à la base de donnée");
+          } else {
+            console.log("La tâche a bien été ajoutée");
+            callback(0);
+            client.close();
+          }
+        }); 
+    }
+  });
+}
+function updateTask(id,name,done, callback){
+  client.connect((err)=>{
+    if (err) {
+      console.log("Erreur lors de la connection à la base de données");
+    }
+    else{
+      const collection = client.db("TODOList").collection("tasks");
+          collection.updateMany({_id : id},{$set:{name : name, done : done}},(err) => {
+          if (err) {
+            console.log("Erreur lors de l'ajout à la base de donnée");
+          } else {
+            console.log("La tâche a bien été modifiée");
+            callback(0);
+            client.close();
+          }
+        }); 
+    }
+  });
+}
+function removeTask(id, callback){
+  client.connect((err)=>{
+    if (err) {
+      console.log("Erreur lors de la connection à la base de données");
+    }
+    else{
+      const collection = client.db("TODOList").collection("tasks");
+      collection.remove({_id : id}, null, function(error, result) {
+        if (error) throw error;
+        else
+          console.log("la tache a bien été supprimée"); 
+          client.close();  
+    });
+    }
+    
+  });
+}
+function removeGroupTask(id, callback){
+  client.connect((err)=>{
+    if (err) {
+      console.log("Erreur lors de la connection à la base de données");
+    }
+    else{
+      getTasksByGroupID(id,(tasks)=>{
+        tasks.array.forEach(element => {
+          removeTask(element._id, (val)=>{})
+        });
+      });
 
-createUser("nfjn", "kebdedab");
+      const collection = client.db("TODOList").collection("tasks_groups");
+
+      collection.remove({_id : id}, null, function(error, result) {
+        if (error) throw error;
+        else
+          console.log("le groupe a bien été supprimée"); 
+          client.close();  
+    });
+    }
+    
+  });
+}
+
 /*
 client.connect((err) => {
   if (err) {
