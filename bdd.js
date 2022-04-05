@@ -48,6 +48,7 @@ function createUser(username, password){
     }
   });
 }
+
 function getUserToken(username, password, callback){  
   let query = { name : username, password : password};
   let res = undefined;
@@ -74,9 +75,8 @@ function getUserToken(username, password, callback){
   });
 }
 
-function getTask(taskName, callback){
-  let query = {name : taskName};
-  let res = undefined;
+function getTasksByUserID(id, callback){
+  let query = {_id : id};
 
   client.connect((err)=>{
     if (err) {
@@ -89,10 +89,8 @@ function getTask(taskName, callback){
           callback(0);
         }  
         else {
-          //console.log(result);
-          res = result[0]._id;
-          console.log(res);
-          callback(res);
+          console.log(result);
+          callback(result);
         }
           client.close();
       });
@@ -101,9 +99,8 @@ function getTask(taskName, callback){
 
 }
 
-function getTaskGroup(taskGroupName, callback){
-  let query = {name : taskGroupName};
-  let res = undefined;
+function getTasksGroupsByUserID(id, callback){
+  let query = {_id : id};
 
   client.connect((err)=>{
     if (err) {
@@ -116,10 +113,8 @@ function getTaskGroup(taskGroupName, callback){
           callback(0);
         }  
         else {
-          //console.log(result);
-          res = result[0]._id;
-          console.log(res);
-          callback(res);
+          console.log(result);
+          callback(result);
         }
           client.close();
       });
