@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node main.js",
     "server": "node server.js",
+    "data": "node bdd.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -23,6 +24,8 @@
     "chalk": "^5.0.1",
     "express": "^4.17.3",
     "jquery": "^3.6.0",
+    "mongodb": "^4.5.0",
+    "mongoose": "^6.2.10",
     "prompt": "^1.2.2"
   }
 }
