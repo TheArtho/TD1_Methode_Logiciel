@@ -282,6 +282,7 @@ $(() => {
             
                             if (data.success) {
                                 deactivateEditMode();
+                                updateTaskList(tasks_groups[groupIndex])
                             }
                         })
                     }
