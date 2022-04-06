@@ -162,6 +162,11 @@ header p {
     padding: 5%;
 }
 
+.disconnect:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
 .side-menu {
     display: flex;
     flex-direction: column;
@@ -286,3 +291,4 @@ header p {
 .task-item:last-child {
     border: none;
 }
+

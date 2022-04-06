@@ -118,7 +118,21 @@ app.post('/createTask', urlencodedParser, function (req, res) {
 
 app.post('/updateTasks', urlencodedParser, function (req, res) {
 
-  bdd.updateTask(req.body.id, req.body.name, (data) => {
+  bdd.updateTask(req.body.id, req.body.name, req.body.done, (data) => {
+    res.send({success: true});
+  })
+});
+
+app.post('/removeTask', urlencodedParser, function (req, res) {
+
+  bdd.removeTask(req.body.id, (data) => {
+    res.send({success: true});
+  })
+});
+
+app.post('/removeGroup', urlencodedParser, function (req, res) {
+
+  bdd.removeGroup(req.body.id, (data) => {
     res.send({success: true});
   })
 });
