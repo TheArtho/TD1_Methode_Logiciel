@@ -1,1 +1,16 @@
+DOCUMENTATION DE LA TODOList
+
+
+Base de donnée :
+    -Nom de la base de donnée : TODOList
+
+    - 3 collections :   -Users (_id, name, password)
+                        -tasks_groups (_id, name, UserID) -> UserID -> _id de l'utilisateur qui a crée la tâche
+                        -tasks (_id, name, done, groupTaskID) done -> booléen avec false si la tâche n'est pas faite et true si elle est faite / groupTaskID -> _id du groupe où se trouve la tâche
+
+    -La configuration de l'accés à la base de donnée se fait dans le fichier bdd.js
+    -Toutes les fonctions pour écrire ou lire dans la base de donnée y sont 
+
+Commande nécessaire : 
+    -npm run server : pour lancer le serveur 
 
