@@ -9,6 +9,8 @@ function getCookie(name) {
     return null;
 }
 
+document.cookie = 'path=/;';
+
 $(() => {
     console.log("Ready!");
 
@@ -28,7 +30,7 @@ $(() => {
         }).done(function (data) {
             
             if (data.success) {
-                document.cookie = 'username='+login_data.username+';token='+data.value+';path=/;';
+                document.cookie = 'username='+login_data.username+',token='+data.value+',path=/';
                 window.location.href = "app.html";
             }
             else {

@@ -26,7 +26,7 @@ app.post('/login', urlencodedParser, function (req, res) {
       result = {
         success : true,
         message: "Authentification success",
-        value: token
+        value: token + ''
       }
     }
 
