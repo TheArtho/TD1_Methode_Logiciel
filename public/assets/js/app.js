@@ -1,15 +1,13 @@
 import {task, task_group} from './taskHandler.js'
 
-function getCookie(name) {
-    let nameEQ = name + "=";
-    let ca = document.cookie.split(';');
-    for(let i = 0; i < ca.length; ++i) {
-        let c = ca[i];
-        while (c.charAt(0)==' ') c = c.substring(1);
-        if (c.indexOf(nameEQ) != -1) return c.substring(nameEQ.length,c.length);
-    }
-    return null;
-}
+function getCookie(cookieName) {
+    let cookie = {};
+    document.cookie.split(',').forEach(function(el) {
+      let [key,value] = el.split('=');
+      cookie[key.trim()] = value;
+    })
+    return cookie[cookieName];
+  }
 
 let editMode = false;
 let groupEditMode = false;
@@ -36,7 +34,7 @@ $(() => {
     /* Other Buttons */
 
     $('.disconnect').click(function() {
-        document.cookie = 'path=/;';
+        document.cookie = 'path=/,';
         window.location.href = "/";
     })
 
@@ -341,7 +339,7 @@ $(() => {
     /* Start */
 
     $('.task-list').empty();
-    $('.username').html(cookie.username);
+    $('.username').html('TODO');
     updateGroupList(function () {
         $('.title').html(tasks_groups[groupIndex].name);
         updateTaskList(tasks_groups[groupIndex]);
