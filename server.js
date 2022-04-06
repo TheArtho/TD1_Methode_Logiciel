@@ -15,7 +15,7 @@ app.post('/login', urlencodedParser, function (req, res) {
   let result;
 
   console.log('Attempt to log in with ', req.body);
-  bdd.getUser(req.body.username, req.body.password, (token) => {
+  bdd.getUserToken(req.body.username, req.body.password, (token) => {
     if (token === 0) {
       result = {
         success : false,
@@ -38,20 +38,89 @@ app.post('/login', urlencodedParser, function (req, res) {
 
 app.post('/signup', urlencodedParser, function (req, res) {
 
-  let result = {
-    success : true,
-    message: "Account Created Successfuly"
-  }
-
   console.log('Attempt to sign up with ', req.body);
 
+  bdd.createUser(req.body.username, req.body.password, (val) => {
 
-  if (req.body.username == 'user') {
-    result.success = false;
-    result.message = "Username already taken";
-  }
+    let result;
 
-  res.send(result);
+    if (val == 0) {
+      result = {
+        success : false,
+        message: "Username already taken"
+      }
+    }
+    else {
+      result = {
+        success : true,
+        message: "Account Created Successfuly"
+      }
+    }
+  
+    res.send(result);
+  })
+});
+
+app.post('/getGroups', urlencodedParser, function (req, res) {
+
+  bdd.getTasksGroupsByUserID(req.body.token, (data) => {
+
+    let result = {success: true};
+
+    if (data === 0) {
+      result.groups = [];
+    }
+    else {
+      result.groups = data;
+    }
+
+    res.send(result);
+  })
+});
+
+app.post('/getTasks', urlencodedParser, function (req, res) {
+
+  bdd.getTasksByGroupID(req.body.group_id, (data) => {
+
+    let result = {success: true};
+
+    if (data === 0) {
+      result.tasks = [];
+    }
+    else {
+      result.tasks = data;
+    }
+
+    res.send(result);
+  })
+});
+
+app.post('/createGroup', urlencodedParser, function (req, res) {
+
+  bdd.createGroupTask(req.body.name, req.body.token, (data) => {
+    res.send({success: true});
+  })
+});
+
+app.post('/updateGroups', urlencodedParser, function (req, res) {
+
+  bdd.updateGroup(req.body.id, req.body.name, (data) => {
+    res.send({success: true});
+  })
+});
+
+app.post('/createTask', urlencodedParser, function (req, res) {
+
+  bdd.createTask(req.body.name, req.body.group_id, (data) => {
+    res.send({success: true});
+  })
+});
+
+app.post('/updateTasks', urlencodedParser, function (req, res) {
+
+  bdd.updateTask(req.body.id, req.body.name, (data) => {
+    res.send({success: true});
+  })
 });
 
 app.listen(port,() => {

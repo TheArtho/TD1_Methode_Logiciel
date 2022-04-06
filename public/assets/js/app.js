@@ -1,4 +1,4 @@
-import {task} from './taskHandler.js'
+import {task, task_group} from './taskHandler.js'
 
 function getCookie(name) {
     let nameEQ = name + "=";
@@ -12,16 +12,30 @@ function getCookie(name) {
 }
 
 let editMode = false;
+let groupEditMode = false;
 
 $(() => {
 
-    window.alert('Username: '+getCookie('username'));
+    const cookie = {
+        username : getCookie('username'),
+        token : getCookie('token')
+    };
+
+    console.log(cookie)
 
     /* Check authentification authorization */
 
-    /* testing task list */
-    let tasks = [];
 
+
+    /* testing task list */
+    
+    let tasks_groups = [];
+    let groupIndex = 0;
+    let selected_group;
+    let tasks;
+
+    
+    /*
     let tasks1 = [
         new task('Task 1', true),
         new task('Task 2', false),
@@ -34,35 +48,185 @@ $(() => {
         new task('Task 9', false)
     ]
 
+    tasks_groups[0].tasks = tasks1;
+
     let tasks2 = [
         new task('Task 1', true),
         new task('Task 2', false),
         new task('Task 3', false),
         new task('Task 4', true),
-        new task('Task 5', true),
-        new task('Task 6', true),
-        new task('Task 7', false),
-        new task('Task 8', true),
-        new task('Task 9', false)
     ];
 
-    let tasks_groups = [tasks1, tasks2];
+    tasks_groups[1].tasks = tasks2;
+    */
 
-    tasks = tasks1;
+    /* Groups */
 
-    let updateTaskList = () => {
+    let saveGroups = () => {
+        let i = 0;
+
+        $(".group-list").children().each(function () {
+            tasks_groups[i].name = $(this).find('.group-name').val();
+
+            $.ajax({
+                type: 'POST',
+                url: 'updateGroups',
+                data: {
+                    id : tasks_groups[i].id,
+                    name : tasks_groups[i].name
+                },
+                dataType: 'json'
+            }).done(function (data) {
+
+                if (data.success) {
+
+                }
+            })
+
+            i++;
+        });
+    }
+
+    let updateGroupList = (callback = () => {}) => {
+        $('.group-list').empty();
+
+        $.ajax({
+            type: 'POST',
+            url: 'getGroups',
+            data: {
+                token : cookie.token
+            },
+            dataType: 'json'
+        }).done(function (data) {
+
+            if (data.success) {
+
+                tasks_groups = [];
+                for (let i = 0; i < data.groups.length; i++) {
+                    tasks_groups.push(new task_group(data.groups[i].name, data.groups[i]._id));
+                }
+
+                for (let i = 0; i < data.groups.length; i++) {
+
+                    $('.group-list').append(
+                        $('<div />').addClass('group-item').click(
+                            function() {
+                                if (!groupEditMode) {
+                                    groupIndex = i;
+                                    updateTaskList(tasks_groups[i]);
+                                }
+                            }
+                        ).append(
+                            $('<p />').addClass('group-name').html(tasks_groups[i].name),
+                        )
+                    )
+                }
+
+                callback();
+            }
+        })
+    }
+
+    let activateGroupEditMode = () => {
+        groupEditMode = true;
+        let i = 0;
+
+        $('#new-group').addClass('disabled');
+
+        $(".group-list").children().each(function () {
+            $(this).empty();
+
+            $(this).append(
+                $('<input />').attr('type', 'text').addClass('group-name').val(tasks_groups[i].name),
+                $('<button />').click(
+                    function() {
+                        //supprimer selected_group[i].id
+                    }
+                ).addClass('button delete').html('X')
+            )
+
+            i++;
+        });
+
+        $('#edit-group').html('Apply Changes');
+    }
+
+    let deactivateGroupEditMode = () => {
+        groupEditMode = false;
+
+        $('#new-group').removeClass('disabled');
+
+        saveGroups();
+
+        $('#edit-group').html('Edit Groups');
+    }
+
+    $('#new-group').click(function () {
+
+        if (!groupEditMode) {
+
+            $.ajax({
+                type: 'POST',
+                url: 'createGroup',
+                data: {
+                    token : cookie.token,
+                    name: 'New Group'
+                },
+                dataType: 'json'
+            }).done(function (data) {
+
+                if (data.success) {
+                    updateGroupList();
+                }
+            })
+        }
+    })
+
+    $('#edit-group').click(function () {
+        if (groupEditMode) {
+            console.log('Group edit mode disabled');
+            deactivateGroupEditMode();
+        }
+        else {
+            console.log('Group edit mode enabled');
+            activateGroupEditMode();
+        }
+    })
+
+    /* Tasks */
+
+    let updateTaskList = (selected_group) => {
         
         $('.task-list').empty();
 
         if (!editMode) {
-            for (let i = 0; i < tasks.length; i++) {
-                $('.task-list').append(
-                    $('<div />').addClass('task-item').append(
-                        $('<p />').addClass('task-name').html(tasks[i].name),
-                        $('<p />').addClass('task-state').addClass(tasks[i].done ? 'done' : 'todo').html(tasks[i].done ? 'DONE' : 'TODO')
-                    )
-                )
-            }
+
+            $.ajax({
+                type: 'POST',
+                url: 'getTasks',
+                data: {
+                    group_id : selected_group.id
+                },
+                dataType: 'json'
+            }).done(function (data) {
+    
+                if (data.success) {
+    
+                    tasks = [];
+                    for (let i = 0; i < data.tasks.length; i++) {
+                        tasks.push(new task_group(data.tasks[i].name, data.tasks[i].done, data.tasks[i]._id));
+                    }
+    
+                    for (let i = 0; i < tasks.length; i++) {
+                        $('.task-list').append(
+                            $('<div />').addClass('task-item').append(
+                                $('<p />').addClass('task-name').html(tasks[i].name),
+                                $('<p />').addClass('task-state').addClass(tasks[i].done ? 'done' : 'todo').html(tasks[i].done ? 'DONE' : 'TODO')
+                            )
+                        )
+                    }
+                }
+            })
         }
         else {
             for (let i = 0; i < tasks.length; i++) {
@@ -115,7 +279,7 @@ $(() => {
         $('#new-task').removeClass('disabled');
 
         saveTasks();
-        updateTaskList();
+        updateTaskList(tasks_groups[groupIndex]);
 
         $('#edit-task').html('Edit Tasks');
     }
@@ -123,11 +287,21 @@ $(() => {
     $('#new-task').click(function () {
 
         if (!editMode) {
-            tasks.push(new task('New Task', false));
+            
+            $.ajax({
+                type: 'POST',
+                url: 'createTask',
+                data: {
+                    group_id : tasks_groups[groupIndex].id,
+                    name: 'New Task'
+                },
+                dataType: 'json'
+            }).done(function (data) {
 
-            // TODO Requête ajax (BDD INSERT)
-    
-            updateTaskList();
+                if (data.success) {
+                    updateTaskList(tasks_groups[groupIndex]);
+                }
+            })
         }
     })
 
@@ -144,5 +318,10 @@ $(() => {
 
     /* Start */
 
-    updateTaskList();
+
+    $('.username').html(cookie.username);
+    updateGroupList(function () {
+        updateTaskList(tasks_groups[groupIndex]);
+    });
+    
 })

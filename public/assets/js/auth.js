@@ -28,8 +28,33 @@ $(() => {
         }).done(function (data) {
             
             if (data.success) {
-                document.cookie = 'username='+login_data.username+';token='+data.token+'path=/;';
+                document.cookie = 'username='+login_data.username+';token='+data.value+';path=/;';
                 window.location.href = "app.html";
+            }
+            else {
+                $('.log-error').remove()
+                $('.auth-form').prepend('<p class="log-error">'+data.message+'</p>');
+            }
+        })
+    });
+
+    $('#signup').click(function() {
+        console.log("Connecting...");
+
+        let login_data = {
+            username: $('#user_username').val(),
+            password: $('#user_password').val()
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: 'signup',
+            data: login_data,
+            dataType: 'json'
+        }).done(function (data) {
+            
+            if (data.success) {
+                window.location.href = "./";
             }
             else {
                 $('.log-error').remove()

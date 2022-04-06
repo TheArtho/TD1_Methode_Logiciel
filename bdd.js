@@ -3,28 +3,6 @@ const uri = "mongodb+srv://Ray:test@todolist.lgwkb.mongodb.net/myFirstDatabase?r
 const client = new MongoClient(uri);
 
 
-function getUser(username,password){  
-  let query = { name : username, password : password};
-
-  client.connect((err)=>{
-    if (err) {
-      console.log("Erreur lors de la connection à la base de données");
-    }
-    else{
-      const collection = client.db("TODOList").collection("users");
-      collection.find(query).toArray((err, result) =>{
-        if(result.length == 0)
-          console.log("Utilisateur introuvable");
-          
-        else
-          console.log(result);
-          
-          client.close();
-      });
-    }
-  });
-}
-
 function createUser(username, password, callback){
   let query = { name : username, password : password};
   exist = 0;
@@ -59,7 +37,8 @@ function createUser(username, password, callback){
   });
 }
 
-function getUserToken(username, password, callback){  
+function getUserToken(username, password, callback) {
+
   let query = { name : username, password : password};
   let res = undefined;
 
@@ -74,7 +53,6 @@ function getUserToken(username, password, callback){
           callback(0);
         }  
         else {
-          //console.log(result);
           res = result[0]._id;
           console.log(res);
           callback(res);
@@ -86,7 +64,7 @@ function getUserToken(username, password, callback){
 }
 
 function getTasksByGroupID(id, callback){
-  let query = {groupTaskID : id};
+  let query = {groupTaskID : ObjectId(id)};
 
   client.connect((err)=>{
     if (err) {
@@ -95,12 +73,14 @@ function getTasksByGroupID(id, callback){
     else{
       const collection = client.db("TODOList").collection("tasks");
       collection.find(query).toArray((err, result) =>{
-        if(result.length == 0) {
-          callback(0);
-        }  
-        else {
-          console.log(result);
-          callback(result);
+        if (Array.isArray(result)) {
+          if (result.length == 0) {
+            callback(0);
+          }  
+          else {
+            console.log(result);
+            callback(result);
+          }
         }
           client.close();
       });
@@ -109,38 +89,41 @@ function getTasksByGroupID(id, callback){
 
 }
 
-function getTasksGroupsByUserID(id, callback){
-  let query = {_id : id};
+function getTasksGroupsByUserID(id, callback) {
 
-  client.connect((err)=>{
-    if (err) {
-      console.log("Erreur lors de la connection à la base de données");
-    }
-    else{
-      const collection = client.db("TODOList").collection("tasks_group");
-      collection.find(query).toArray((err, result) =>{
-        if(result.length == 0) {
-          callback(0);
-        }  
-        else {
-          console.log(result);
-          callback(result);
-        }
-          client.close();
-      });
-    }
-  });
-
-}
-function createGroupTask(name, userID, callback){
   client.connect((err)=>{
     if (err) {
       console.log("Erreur lors de la connection à la base de données");
     }
     else{
       const collection = client.db("TODOList").collection("tasks_groups");
-      
-          collection.insertOne({name : name, userID : userID},(err) => {
+
+      collection.find({userID : ObjectId(id)}).toArray((err, result) => {
+        if (Array.isArray(result)) {
+          if(result.length == 0) {
+            callback(0);
+          }  
+          else {
+            //console.log(result);
+            callback(result);
+          }
+        }
+          client.close();
+      });
+    }
+  });
+}
+
+function createGroupTask(name, userID, callback){
+
+  client.connect((err)=>{
+    if (err) {
+      console.log("Erreur lors de la connection à la base de données");
+    }
+    else{
+      const collection = client.db("TODOList").collection("tasks_groups");
+
+          collection.insertOne({name : name, userID : ObjectId(userID)}, (err) => {
           if (err) {
             console.log("Erreur lors de l'ajout à la base de donnée");
           } else {
@@ -152,6 +135,7 @@ function createGroupTask(name, userID, callback){
     }
   });
 }
+
 function createTask(name, groupTaskID, callback){
   client.connect((err)=>{
     if (err) {
@@ -159,7 +143,7 @@ function createTask(name, groupTaskID, callback){
     }
     else{
       const collection = client.db("TODOList").collection("tasks");
-          collection.insertOne({name : name, done : false, groupTaskID : groupTaskID},(err) => {
+          collection.insertOne({name : name, done : false, groupTaskID : ObjectId(groupTaskID)}, (err) => {
           if (err) {
             console.log("Erreur lors de l'ajout à la base de donnée");
           } else {
@@ -171,6 +155,27 @@ function createTask(name, groupTaskID, callback){
     }
   });
 }
+
+function updateGroup(id, name, callback) {
+  client.connect((err)=>{
+    if (err) {
+      console.log("Erreur lors de la connection à la base de données");
+    }
+    else{
+      const collection = client.db("TODOList").collection("tasks");
+          collection.updateOne({_id : ObjectId(id)}, {$set:{name : name}}, (err) => {
+          if (err) {
+            console.log("Erreur lors de l'ajout à la base de donnée => "+err);
+          } else {
+            console.log("Le groupe a bien été modifié");
+            callback(0);
+            client.close();
+          }
+        }); 
+    }
+  });
+}
+
 function updateTask(id,name,done, callback){
   client.connect((err)=>{
     if (err) {
@@ -190,6 +195,7 @@ function updateTask(id,name,done, callback){
     }
   });
 }
+
 function removeTask(id, callback){
   client.connect((err)=>{
     if (err) {
@@ -207,6 +213,7 @@ function removeTask(id, callback){
     
   });
 }
+
 function removeGroupTask(id, callback){
   client.connect((err)=>{
     if (err) {
@@ -249,3 +256,5 @@ client.connect((err) => {
       }
     });}
   });*/
+
+  module.exports = {createUser, getUserToken, getTasksGroupsByUserID, getTasksByGroupID, createGroupTask, updateGroup, createTask, updateTask};
