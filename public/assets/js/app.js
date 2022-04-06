@@ -340,6 +340,7 @@ $(() => {
 
     /* Start */
 
+    $('.task-list').empty();
     $('.username').html(cookie.username);
     updateGroupList(function () {
         $('.title').html(tasks_groups[groupIndex].name);
