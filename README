@@ -14,3 +14,5 @@ Base de donnée :
 Commande nécessaire : 
     -npm run server : pour lancer le serveur 
 
+Problèmes techniques :
+    -problème avec la base de données au niveau des updates, forçant à rafraichir la page après avoir modifié des groups/tâches et avoir appuyé sur le bouton "Apply"
